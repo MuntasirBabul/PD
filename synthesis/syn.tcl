@@ -95,7 +95,7 @@ define_test_mode        -name           TEST_MODE   \
                         -lec_value      auto        \
                         -create_port    TM          \
 
-define_test_mode        -name           RST_SD_MODE \
+define_test_mode        -name           RST_MODE \
                         -active         low         \
                         -lec_value      auto        \
                         -create_port    reset_n     \
@@ -197,6 +197,9 @@ report_scan_chains
 syn_${STAGE} -incr
 }
 
+check_design -all            > RPT/$STAGE/${DESIGN}_${STAGE}.check_design.rpt
+check_timing_intent -verbose > RPT/$STAGE/${DESIGN}_${STAGE}.timing_intent.rpt
+
 # Reports
 report_timing -group in2out  > RPT/$STAGE/${DESIGN}_${STAGE}.timing_in2out.rpt
 report_timing -group in2reg  > RPT/$STAGE/${DESIGN}_${STAGE}.timing_in2_reg.rpt
@@ -212,6 +215,15 @@ report_timing                -view DFT_SHIFT_MODE > RPT/dft/$STAGE/${DESIGN}_${S
 report_dp                    > RPT/$STAGE/${DESIGN}_${STAGE}.datapath.rpt
 report_qor                   > RPT/$STAGE/${DESIGN}_${STAGE}.qor.rpt
 report_timing                > RPT/$STAGE/${DESIGN}_${STAGE}.timing.rpt
+report_gates -power	     > RPT/$STAGE/${DESIGN}_${STAGE}.gates.rpt
+report_dp 		     > RPT/$STAGE/${DESIGN}_${STAGE}.datapath.rpt
+report_power -view $pwrView -unit nW > $RPT/$STAGE/${DESIGN}_${STAGE}.power.rpt
+report_power -view $pwrView -unit nW -by_libcell > $RPT/$STAGE/${DESIGN}_${STAGE}.power_by_libcell.rpt
+report_power -view $pwrView -unit nW -by_func_type > $RPT/$STAGE/${DESIGN}_${STAGE}.power_by_functype.rpt
+report_scan_setup            > RPT/$STAGE/${DESIGN}_${STAGE}.scan_setup.rpt
+
+# QOR, area, gates, and timing reports
+write_reports -dir ${_REPORTS_PATH} -tag $tag
 write_snapshot -outdir         RPT/$STAGE -tag ${DESIGN}_${STAGE}
 # Summary
 report_summary -directory      RPT/$STAGE
