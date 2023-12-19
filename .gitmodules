@@ -4,3 +4,6 @@
 [submodule "backend"]
 	path = backend
 	url = git@github.com:MuntasirBabul/backend.git
+[submodule "rtl"]
+	path = rtl
+	url = git@github.com:MuntasirBabul/rtl
